@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ToDoList—最简单的待办事项列表</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+    
+    <div class="container todo-box">
+
+        <h1 class="text-center"> ToDoList—最简单的待办事项列表 </h1>
+
+        <input v-model = 'new_title' @keyup.enter = "saveInputVal" type="text" class="form-control">
+        
+        <div class="todo-content">
+            <h3>正在进行 <span class="label label-primary pull-right">{{ todos.length }}</span> </h3>
+            <ul class="list-group">
+                <!-- 循环 -->
+                <li 
+                    v-for = "items in todos":key = "items.id"
+                class="list-group-item">
+                    <div class="row">
+                        <input  class="col-xs-1" type="checkbox">
+                        <div class="title col-xs-8">
+                            <!-- <input type="text"> -->
+                            <input @blur = "items.isChanging = false" v-model = "items.title" v-if = "items.isChanging" type="text" >
+                            <span v-else @click = "items.isChanging = !items.isChanging">{{items.title}}</span>
+                        </div>
+                        <button @click = "removeList(items.id)"  type="button" class="close col-xs-1" ><span >&times;</span></button>
+                    </div>
+                </li>
+            </ul> 
+        </div>
+        <div class="todo-content">
+            <h3>已完成 <span class="label label-primary pull-right">0</span> </h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <input  class="col-xs-1" type="checkbox">
+                        <div class="title col-xs-8">
+                            <!-- <input type="text"> -->
+                            <span>哈哈哈</span>
+                        </div>
+                        <button  type="button" class="close col-xs-1" ><span >&times;</span></button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script src="../base/vue.js"></script>
+    <script>
+        new Vue({
+            el: '.todo-box',
+            data : {
+                todosId : 1,
+                todos :[
+                    {id : 1, title: '嘻嘻嘻',isFinished:false ,isChanging:false}
+                ] ,
+                new_title : ''//获取input中的数据
+            },
+            methods: {
+                //定义一个类保存
+                saveInputVal(){
+                    this.todos.push({
+                        id : ++this.todosId,
+                        title : this.new_title,//相当于input中的value值
+                        isFinished : false,
+                        isChanging : false 
+                    })
+                    this.new_title =''
+                },
+                //删除信息
+                removeList(id){
+                    this.todos = this.todos.filter(item => item.id !== id)
+                }
+            }   
+            
+            
+        })
+       
+    </script>
+</body>
+</html>

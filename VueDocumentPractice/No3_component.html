@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="box">
+        <todo-item
+            v-for="item in text":todo = "item":key = "item.id"
+        >
+
+        </todo-item>
+
+    </div>
+
+
+
+    <script src="../base/vue.js"></script>
+    <script>
+        Vue.component('todo-item',{
+            props: ['todo'],
+            template : '<li>{{todo.text}}</li>'
+
+        })
+        new Vue({
+            el: '#box',
+            data :{
+                text : [
+                { id : 1, text: '哈哈'},
+                { id : 2, text: '嘻嘻'},
+                { id : 3, text: '呵呵'}
+                ]
+            } 
+        })
+        
+    </script>
+</body>
+
+</html>
