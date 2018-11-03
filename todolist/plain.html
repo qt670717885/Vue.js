@@ -18,38 +18,42 @@
         <input v-model = 'new_title' @keyup.enter = "saveInputVal" type="text" class="form-control">
         
         <div class="todo-content">
-            <h3>正在进行 <span class="label label-primary pull-right">{{ todos.length }}</span> </h3>
+            <h3>正在进行 <span class="label label-primary pull-right">{{ unfinished.length }}</span> </h3>
             <ul class="list-group">
                 <!-- 循环 -->
                 <li 
-                    v-for = "items in todos":key = "items.id"
+                    v-for = "item in  unfinished":key = "item.id"
                 class="list-group-item">
                     <div class="row">
-                        <input  class="col-xs-1" type="checkbox">
+                        <input v-model="item.isFinished"  class="col-xs-1" type="checkbox">
                         <div class="title col-xs-8">
                             <!-- <input type="text"> -->
-                            <input @blur = "items.isChanging = false" v-model = "items.title" v-if = "items.isChanging" type="text" >
-                            <span v-else @click = "items.isChanging = !items.isChanging">{{items.title}}</span>
+                            <input @blur = "item.isChanging = false" v-model.lazy = "item.title" v-if = "item.isChanging" type="text" >
+                            <span v-else @click = "item.isChanging = !item.isChanging">{{item.title}}</span>
                         </div>
-                        <button @click = "removeList(items.id)"  type="button" class="close col-xs-1" ><span >&times;</span></button>
+                        <button @click = "removeList(item.id)"  type="button" class="close col-xs-1" ><span >&times;</span></button>
                     </div>
                 </li>
             </ul> 
         </div>
         <div class="todo-content">
-            <h3>已完成 <span class="label label-primary pull-right">0</span> </h3>
+            <h3>正在进行 <span class="label label-primary pull-right">{{ finished.length }}</span> </h3>
             <ul class="list-group">
-                <li class="list-group-item">
+                <!-- 循环 -->
+                <li 
+                    v-for = "item in  finished":key = "item.id"
+                class="list-group-item">
                     <div class="row">
-                        <input  class="col-xs-1" type="checkbox">
+                        <input v-model="item.isFinished" class="col-xs-1" type="checkbox">
                         <div class="title col-xs-8">
                             <!-- <input type="text"> -->
-                            <span>哈哈哈</span>
+                            <input @blur = "item.isChanging = false" v-model.lazy = "item.title" v-if = "item.isChanging" type="text" >
+                            <span v-else @click = "item.isChanging = !item.isChanging">{{item.title}}</span>
                         </div>
-                        <button  type="button" class="close col-xs-1" ><span >&times;</span></button>
+                        <button @click = "removeList(item.id)"  type="button" class="close col-xs-1" ><span >&times;</span></button>
                     </div>
                 </li>
-            </ul>
+            </ul> 
         </div>
 
     </div>
@@ -59,11 +63,23 @@
         new Vue({
             el: '.todo-box',
             data : {
-                todosId : 1,
-                todos :[
-                    {id : 1, title: '嘻嘻嘻',isFinished:false ,isChanging:false}
-                ] ,
+                todosId : JSON.parse(localStorage.todoid || '0'),
+                todos :JSON.parse(localStorage.todos || '[]'),
                 new_title : ''//获取input中的数据
+            },
+            watch: {
+                todos : {
+                    deep : true,
+                    handler(){
+                        //将新的信息存到localstorge里
+                        localStorage.todosid = this.todosid,
+                        localStorage.todos = JSON.stringify(this.todos)
+                    }
+                }
+            }, 
+            computed:{
+                 finished(){ return this.todos.filter(item =>item.isFinished) },
+                 unfinished(){ return this.todos.filter(item =>!item.isFinished) }
             },
             methods: {
                 //定义一个类保存

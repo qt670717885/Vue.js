@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input v-model = "newtitle" type="text">
+        <p><button @click = "change">点我</button></p>
+        <p>{{title | currency}}</p>
+    </div>
+
+    <script src="../base/vue.js"></script>
+    <script>
+
+        Vue.filter('currency',(val) => {
+                if(val == 0) val = 0.00;
+            })
+        
+        new Vue({
+            el : '#app',
+            data : {
+                title : '',
+                newtitle : ''
+            },
+            methods : {
+                change(){
+                    this.title = this.newtitle
+                } 
+            }
+        })
+    </script>
+</body>
+</html>
